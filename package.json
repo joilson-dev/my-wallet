@@ -1,23 +1,24 @@
 {
   "name": "my-wallet",
   "version": "1.0.0",
-  "main": "/src/server.ts",
+  "main": "/src/app.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.9.0",
+    "mongodb": "^6.10.0",
     "my-wallet": "file:"
   },
   "devDependencies": {
