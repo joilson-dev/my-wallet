@@ -14,7 +14,7 @@ export async function connectDB() {
   try {
     const client = new MongoClient(process.env.CONNECTION_MONGO);
     await client.connect();
-    dbInstance = client.db();
+    dbInstance = client.db('MyWallet');
     console.log("Conectado ao MongoDB com sucesso.");
     return dbInstance;
   } catch (error) {
