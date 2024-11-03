@@ -29,3 +29,31 @@ export async function addTransaction(req, res) {
         res.status(500).json({ message: 'Erro ao adicionar transação' });
     }
 }
+
+export async function listTransactions(req, res) {
+    const userId = req.user.id;
+    const page = parseInt(req.query.page) || 1;
+
+    if (page <= 0) {
+        return res.status(400).json({ message: 'Invalid page number. It should be a positive integer.' });
+    }
+
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    try {
+        const db = getDB();
+
+        const transactions = await db.collection('transactions')
+            .find({ userId })
+            .sort({ date: -1 })
+            .skip(skip)
+            .limit(limit)
+            .toArray();
+
+        res.status(200).json(transactions);
+    } catch (error) {
+        console.error('Error fetching transactions:', error);
+        res.status(500).json({ message: 'An error occurred while fetching transactions.' });
+    }
+}
