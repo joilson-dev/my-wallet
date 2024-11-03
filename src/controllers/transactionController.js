@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import { transactionSchema } from '../schemas/transactionSchema.js';
 
@@ -56,4 +57,33 @@ export async function listTransactions(req, res) {
         console.error('Error fetching transactions:', error);
         res.status(500).json({ message: 'An error occurred while fetching transactions.' });
     }
+}
+
+export async function updateTransaction(req, res) {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const updatedData = req.body;
+
+    const db = getDB();
+
+    const existingTransaction = await db.collection('transactions').findOne({
+        _id: new ObjectId(id),
+        userId: userId
+    });
+
+    if (!existingTransaction) {
+        return res.status(404).json({ message: 'Transação não encontrada ou não autorizada.' });
+    }
+
+    const result = await db.collection('transactions').findOneAndUpdate(
+        { _id: new ObjectId(id), userId: userId },
+        { $set: updatedData },
+        { returnDocument: 'after' }
+    );
+
+    if (!result.value) {
+        return res.status(404).json({ message: 'Erro ao atualizar a transação.' });
+    }
+
+    return res.sendStatus(204)
 }
