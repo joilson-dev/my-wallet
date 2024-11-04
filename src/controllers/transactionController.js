@@ -72,7 +72,7 @@ export async function updateTransaction(req, res) {
     });
 
     if (!existingTransaction) {
-        return res.status(404).json({ message: 'Transação não encontrada ou não autorizada.' });
+        return res.status(401).json({ message: 'Transação não encontrada ou não autorizada.' });
     }
 
     const result = await db.collection('transactions').findOneAndUpdate(
@@ -86,4 +86,19 @@ export async function updateTransaction(req, res) {
     }
 
     return res.sendStatus(204)
+}
+export async function deleteTransaction(req, res) {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const db = getDB();
+    const transaction = await db.collection('transactions').findOne({ _id: new ObjectId(id) });
+
+    if (!transaction || transaction.userId !== userId) {
+        return res.status(401).json({ message: 'Transação não encontrada ou não autorizada.' });
+    }
+
+    await db.collection('transactions').deleteOne({ _id: new ObjectId(id) });
+
+    return res.status(204).send();
 }
