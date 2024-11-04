@@ -1,7 +1,7 @@
 {
   "name": "my-wallet",
   "version": "1.0.0",
-  "main": "/src/app.js",
+  "main": "src/app.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon src/app.js",
